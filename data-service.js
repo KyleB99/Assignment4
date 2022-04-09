@@ -1,7 +1,7 @@
 const { response } = require("express");
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-mongoose.connect("mongodb+srv://DaFuzzyOgre:Flavory15@capstone.qdnab.mongodb.net/Capstone?retryWrites=true&w=majority");
+mongoose.connect("mongodb+srv://krburdet:UwU729@senecaweb.30gqx.mongodb.net/Assignment4?retryWrites=true&w=majority");
 
 const Employee = mongoose.model('Employee', Schema({
     employeeNum: Number, 
@@ -17,7 +17,8 @@ const Employee = mongoose.model('Employee', Schema({
     isManager: Boolean,
     employeeManagerNum: Number,
     status: String,
-    hireDate: String
+    hireDate: String,
+    department: String
   }));
 
   const Department = mongoose.model('Department', Schema({
@@ -79,32 +80,26 @@ module.exports.getEmployeeByNum = function (num) {
 
 module.exports.getEmployeesByStatus = function (status) {
     return new Promise(function (resolve, reject) {
-       Employee.find({status: status})
-       .exec()
-       .then((employeeByStatus) => {
-        employeeByStatus = employeeByStatus.map(value => value.toObject());
-        if (err){
-            reject("Error Finding Data")
-        }
-        else {
-            resolve(employeeByStatus);
-        }
-})})};
+       Employee.find({status: status}, function(err, result){
+           if(err){
+               reject("error");
+           }
+           else{
+               resolve(result);
+           }
+       })})};
 
 
 
 module.exports.getEmployeesByDepartment = function (department) {
     return new Promise(function (resolve, reject) { 
-        Employee.find({departmentId: department})
-        .exec()
-        .then((employeeByDepartment) => {
-         employeeByDepartment = employeeByDepartment.map(value => value.toObject());
-         if (err){
-             reject("Error Finding Data")
-         }
-         else {
-             resolve(employeeByDepartment);
-         }
+        Employee.find({department: department}, function(err, result){
+            if(err){
+                reject("error");
+            }
+            else{
+                resolve(result);
+            }
 })})};
 
 
@@ -145,16 +140,29 @@ module.exports.getDepartments = function (){
             }
     })})};
 
-    module.exports.deleteDepartmentById = function (id) {
+    module.exports.deleteDepartmentById = function (departmentId) {
         return new Promise(function (resolve, reject) {
-           Department.deleteOne({departmentId: id})
+           Department.deleteOne({departmentId: departmentId}, function(err, result){
             if (err){
                 reject("Error Finding Data")
             }
             else {
-                resolve(`Department: ${id} was deleted`);
+                resolve(result)
             }
+        })
     })};
+    module.exports.deleteEmployeeByNum = function (empNum) {
+        return new Promise(function (resolve, reject) {
+           Employee.deleteOne({employeeNum: empNum}, function(err, result){
+            if (err){
+                reject("Error Finding Data")
+            }
+            else {
+                resolve(result)
+            }
+        })
+    })};
+
 
 
 
